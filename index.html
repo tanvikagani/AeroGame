@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AeroGame – Hybrid Adaptive Airline Pricing Agent</title>
+<style>
+:root{--bg:#f4f6f9;--panel:#fff;--bd:#d5dbe4;--tx:#1b2433;--mu:#66738a;--ac:#0a7a5c;--wa:#b86e00;--er:#c23b3b;--c1:#2f6fd6;--c2:#d6453d;--c3:#d98a1a;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#020617;--panel:#0b1224;--bd:#1e293b;--tx:#dbe4f2;--mu:#7f8ea8;--ac:#2dd4a0;--wa:#f5b043;--er:#ff6b6b;--c1:#5b9bff;--c2:#ff6b6b;--c3:#ffb454}}
+*{box-sizing:border-box}html{color-scheme:light dark}
+body{margin:0;background:var(--bg);color:var(--tx);font:13px/1.45 ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+header{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;justify-content:space-between;padding:10px 16px;border-bottom:1px solid var(--bd);background:var(--panel)}
+h1{font:600 14px/1 ui-monospace,monospace;letter-spacing:.08em;margin:0;text-transform:uppercase}
+h1 span{color:var(--ac)}.sub{color:var(--mu);font-size:11px}
+nav{display:flex;gap:2px;padding:0 16px;border-bottom:1px solid var(--bd);overflow-x:auto}
+nav button{background:none;border:0;border-bottom:2px solid transparent;color:var(--mu);padding:10px 14px;font:inherit;cursor:pointer;white-space:nowrap;text-transform:uppercase;letter-spacing:.05em;font-size:11px}
+nav button.on{color:var(--tx);border-color:var(--ac)}
+main{padding:14px 16px;max-width:1280px;margin:auto}
+.grid{display:grid;gap:12px}.g4{grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}.g2{grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.p{background:var(--panel);border:1px solid var(--bd);padding:12px}
+.p h2{margin:0 0 10px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);font-weight:600}
+.k{font-size:22px;font-weight:600}.k small{font-size:11px;color:var(--mu);font-weight:400}
+.up{color:var(--ac)}.dn{color:var(--er)}.wn{color:var(--wa)}
+.sc{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:12px}
+th,td{padding:6px 8px;border-bottom:1px solid var(--bd);text-align:right;white-space:nowrap}th{color:var(--mu);font-weight:500;font-size:10px;text-transform:uppercase;letter-spacing:.06em}
+th:first-child,td:first-child,td.l,th.l{text-align:left}
+.tag{display:inline-block;padding:1px 6px;border:1px solid var(--bd);font-size:10px}
+.ctl{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:end}.ctl label{display:flex;flex-direction:column;gap:3px;font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.06em}
+select,input[type=range]{font:inherit;background:var(--bg);color:var(--tx);border:1px solid var(--bd);padding:5px}input[type=range]{padding:0;width:140px}
+.btn{background:var(--ac);color:#02130d;border:0;padding:8px 16px;font:600 12px ui-monospace,monospace;cursor:pointer;text-transform:uppercase;letter-spacing:.06em}.btn:disabled{opacity:.5}
+.flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.node{border:1px solid var(--bd);background:var(--panel);padding:10px;border-left:3px solid var(--bd)}
+.node.run{border-left-color:var(--wa)}.node.ok{border-left-color:var(--ac)}.node.fl{border-left-color:var(--er)}
+.node b{font-size:11px;text-transform:uppercase;letter-spacing:.06em}.node pre{margin:6px 0 0;white-space:pre-wrap;color:var(--mu);font:11px/1.4 ui-monospace,monospace}
+.log{height:150px;overflow:auto;font-size:11px;color:var(--mu)}.log div{padding:1px 0}
+.mx{display:grid;grid-template-columns:90px 1fr 1fr;gap:6px;max-width:640px}
+.cell{border:1px solid var(--bd);padding:10px;text-align:center}.cell.n{outline:2px solid var(--ac)}
+.hd{color:var(--mu);font-size:11px;display:flex;align-items:center;justify-content:center;text-transform:uppercase}
+svg text{fill:var(--mu);font:10px ui-monospace,monospace}
+header{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,var(--panel),var(--bg))}
+nav{position:sticky;top:48px;z-index:4;background:var(--bg)}
+.p{border-radius:6px;transition:border-color .15s}.p:hover{border-color:var(--mu)}
+.kc .k{margin:2px 0}.mini{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;padding-top:8px;border-top:1px dashed var(--bd)}
+.mini span{display:flex;flex-direction:column;font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.05em}.mini b{color:var(--tx);font-size:12px;text-transform:none;letter-spacing:0}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between;margin-bottom:10px}
+.chips{display:flex;gap:4px}.chips button{background:var(--bg);color:var(--mu);border:1px solid var(--bd);padding:4px 10px;font:inherit;font-size:11px;cursor:pointer;border-radius:3px}.chips button.on{color:var(--tx);border-color:var(--ac)}.chips button:disabled{opacity:.4;cursor:default}
+.pill{padding:1px 7px;border-radius:9px;font-size:10px;border:1px solid var(--bd)}.pill.ok{color:var(--ac)}.pill.wn{color:var(--wa)}
+.lf{display:inline-block;width:56px;height:6px;background:var(--bg);vertical-align:middle;border-radius:3px;overflow:hidden}.lf i{display:block;height:6px}
+tr:hover td{background:color-mix(in srgb,var(--ac) 6%,transparent)}.btn{border-radius:3px}.node,.cell{border-radius:4px}
+body{font-size:14px}.hint{border-left:3px solid var(--ac);margin-bottom:12px;background:color-mix(in srgb,var(--ac) 6%,var(--panel))}.hint.warn{border-left-color:var(--wa)}.hint .big{font-size:15px;line-height:1.65}.hint p{margin:6px 0}
+.gl{margin-top:12px}.gl summary{cursor:pointer;font-weight:600}.gl li{margin:6px 0}main>.p.hint+.p,main>.p.hint+.grid{margin-top:0}
+nav button{font-size:13px;text-transform:none;letter-spacing:0}.btn{font-size:14px;padding:10px 18px}
+body{background:radial-gradient(900px 420px at 85% -10%,color-mix(in srgb,var(--ac) 14%,transparent),transparent),radial-gradient(700px 360px at 0% 0%,color-mix(in srgb,var(--c1) 13%,transparent),transparent),var(--bg);background-attachment:fixed}
+header{position:static;background:transparent;border:0}
+nav{top:0;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(10px)}
+nav button{border-radius:4px 4px 0 0;transition:background .15s,color .15s}nav button:hover{color:var(--tx)}
+nav button.on{background:color-mix(in srgb,var(--ac) 10%,transparent);box-shadow:inset 0 -2px 0 var(--ac)}
+.ticker{overflow:hidden;border-block:1px solid var(--bd);background:var(--panel);white-space:nowrap}
+#tk{display:inline-flex;width:max-content;animation:scroll 45s linear infinite}#tk span{padding:7px 26px;font-size:11px;border-right:1px solid var(--bd)}#tk em{font-style:normal}.ticker:hover #tk{animation-play-state:paused}
+@keyframes scroll{to{transform:translateX(-25%)}}
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:16px;align-items:center;padding:22px 16px 10px;max-width:1280px;margin:auto}
+@media(max-width:720px){.hero{grid-template-columns:1fr}}
+.hero h2{font:700 30px/1.1 system-ui,-apple-system,sans-serif;letter-spacing:-.025em;margin:8px 0}
+.hero em{font-style:normal;background:linear-gradient(90deg,var(--c1),var(--ac));-webkit-background-clip:text;background-clip:text;color:transparent}
+.eyebrow{font-size:10px;letter-spacing:.12em;color:var(--ac)}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--ac);margin-right:4px;animation:pulse 1.6s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 var(--ac)}100%{box-shadow:0 0 0 8px transparent}}
+.route{width:100%;max-height:130px;border:1px solid var(--bd);border-radius:8px;background:repeating-linear-gradient(0deg,transparent 0 19px,var(--bd) 19px 20px),var(--panel);opacity:.95}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}}
+.p,.node,.cell{animation:rise .4s both}.grid>:nth-child(2){animation-delay:.06s}.grid>:nth-child(3){animation-delay:.12s}.grid>:nth-child(4){animation-delay:.18s}
+.kc{transition:transform .2s,box-shadow .2s}.kc:hover{transform:translateY(-3px);box-shadow:0 10px 26px -14px var(--ac)}
+.k{letter-spacing:-.02em;font-size:26px}
+.btn{background:linear-gradient(135deg,var(--ac),var(--c1));color:#fff;animation:glow 2.4s infinite}.btn:hover{filter:brightness(1.1)}
+@keyframes glow{50%{box-shadow:0 0 18px -2px var(--ac)}}
+.node.run{background:linear-gradient(90deg,var(--panel),color-mix(in srgb,var(--wa) 14%,var(--panel)),var(--panel));background-size:200% 100%;animation:rise .4s both,sh 1s linear infinite}
+@keyframes sh{to{background-position:-200% 0}}
+.node.ok{box-shadow:inset 3px 0 12px -8px var(--ac)}
+.cell.n{box-shadow:0 0 24px -6px var(--ac);background:color-mix(in srgb,var(--ac) 8%,var(--panel))}
+::-webkit-scrollbar{height:8px;width:8px}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:4px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style></head><body>
+<header><div><h1>Aero<span>Game</span> · Hybrid Adaptive Pricing Agent</h1><div class="sub">BLR → DEL corridor · DGCA operational history 2023–2026 · an AI that suggests ticket prices and checks they’re fair</div></div><div class="sub" id="clock"></div></header>
+<div class="ticker"><div id="tk"></div></div>
+<section class="hero"><div><div class="eyebrow"><i class="dot"></i> LIVE MODEL · BLR → DEL · 300 DGCA RECORDS</div><h2>Price the sky.<br><em>Never collude.</em></h2><p class="sub">A Q-learning agent learns fares, a Nash solver stress-tests them, and an antitrust guard signs off — all from public data.</p></div>
+<svg class="route" viewBox="0 0 360 120"><defs><linearGradient id="rg" x1="0" x2="1"><stop offset="0" stop-color="var(--c1)"/><stop offset="1" stop-color="var(--ac)"/></linearGradient></defs><path id="rt" d="M36,92 Q190,-30 326,34" fill="none" stroke="url(#rg)" stroke-width="2" stroke-dasharray="4 6"/><circle cx="36" cy="92" r="6" fill="var(--c1)"/><circle cx="326" cy="34" r="6" fill="var(--ac)"/><text x="22" y="112">BLR · Bengaluru</text><text x="262" y="58">DEL · Delhi</text><g><animateMotion dur="6s" repeatCount="indefinite" rotate="auto"><mpath href="#rt"/></animateMotion><path d="M10 0L-7 -6L-3 0L-7 6Z" fill="var(--tx)"/></g></svg></section>
+<nav id="nav"></nav><main id="view"></main>
+<script>
+const SEED=[['6E','IndiGo','6E-2312','2023-05-12','A320neo',186,174,93.55,6240.5,6615.5,'ON_TIME'],['6E','IndiGo','6E-6511','2024-01-10','A320neo',186,186,100,8900,9500,'ON_TIME'],['6E','IndiGo','6E-2432','2025-10-05','A320neo',186,183,98.39,8500,9225,'ON_TIME'],['6E','IndiGo','6E-5098','2026-03-15','A321neo',232,220,94.82,7800,8525,'ON_TIME'],
+['AI','Air India','AI-502','2023-05-12','A321',190,152,80,8500,9400,'ON_TIME'],['AI','Air India','AI-804','2024-01-10','B787',256,218,85.15,11200,12100,'DELAYED'],['AI','Air India','AI-502','2025-10-05','A321',190,168,88.42,10500,11450,'ON_TIME'],['AI','Air India','AI-804','2026-03-15','B787',256,230,89.84,12500,13600,'ON_TIME'],
+['QP','Akasa Air','QP-1101','2023-05-12','B737MAX',189,161,85.18,5800,6250,'ON_TIME'],['QP','Akasa Air','QP-1103','2024-01-10','B737MAX',189,175,92.59,8100,8700,'ON_TIME'],['QP','Akasa Air','QP-1101','2025-10-05','B737MAX',189,178,94.17,7900,8550,'ON_TIME'],['QP','Akasa Air','QP-1103','2026-03-15','B737MAX',189,181,95.76,7300,7950,'ON_TIME']];
+const FL={'6E':[['6E-2312','A320neo',186],['6E-6511','A320neo',186],['6E-5098','A321neo',232],['6E-2432','A320neo',186]],AI:[['AI-502','A321',190],['AI-804','B787',256],['AI-506','A320neo',180],['AI-808','B787',256]],QP:[['QP-1101','B737MAX',189],['QP-1103','B737MAX',189],['QP-1105','B737MAX',189],['QP-1107','B737MAX',189]]},FEE={'6E':600,AI:850,QP:550},NM={'6E':'IndiGo',AI:'Air India',QP:'Akasa Air'};
+const RAW={'6E':'168:5900 172:6150 210:6400 165:5850D 170:6000 163:5750 208:6250 160:5600 166:5950D 164:5800 204:6100 158:5550 162:5700 165:5850 228:8200 183:8450D 185:8600 181:8300 225:8100 179:7950 184:8550 186:8800D 232:9100 182:8400 176:7500 170:6900 212:7100 166:6700 168:6800D 171:6950 215:7250 165:6650 169:6750 173:7050 218:7500 175:7600 178:7800D 174:7550 220:7700 168:7100 164:6850 166:6950 209:7050 161:6600D 165:6800 167:6900 211:7150 172:7300 180:8150 183:8400D 226:8300 178:8000 176:7850 181:8250 230:8950D 185:8700 179:8050 174:7650 214:7350 169:6900D 171:7050 173:7200 216:7400 167:6850 170:7000 172:7150D 219:7650 176:7750 179:7900 175:7700 221:7950 171:7250D 167:7000 169:7100 213:7200 163:6750 166:6900 168:7050D 215:7300 170:7400 174:7550 181:8300 227:8450 179:8150D 177:7950 182:8350 229:8850 184:8600 186:9150D 177:7900 216:7500 172:7250 168:6950 170:7100D 213:7350 171:7200 173:7400 175:7600 220:7850D 177:7950',
+AI:'142:8200 198:10500D 140:7900 202:10800 145:8400D 195:10300 138:7800 199:10650 143:8300D 194:10250 135:7700 192:10100 146:8450D 197:10450 162:11200 232:14500D 166:11800 228:14200 159:10950 225:13900D 169:12100 236:14900 165:11600D 230:14300 158:10800 215:13100 151:10150D 210:12700 153:10350 212:12900D 154:10450 208:12500 155:10550 213:13000D 156:10650 217:13350 160:11000 214:13150D 157:10750 211:12850 150:10100 206:12350D 148:9950 203:12100 152:10250 207:12450D 149:10050 210:12700 164:11550 224:13800D 161:11100 220:13450 162:11350 226:14000D 166:11750 234:14700 160:11100 218:13400D 154:10450 212:12900 156:10650 214:13150D 155:10550 216:13250 157:10750 215:13100D 159:10950 219:13500 161:11200 216:13250D 158:10850 213:13000 151:10200 209:12600D 150:10100 205:12250 153:10350 208:12500D 151:10150 211:12850 155:10550 222:13600D 163:11300 221:13550 159:10900 219:13350D 165:11600 228:14200 170:12250D 223:13700 156:10650 214:13150 154:10450 211:12850D 152:10250 213:13000 155:10550 215:13100 157:10750D 217:13350',
+QP:'160:5400 164:5650 162:5550 158:5300D 161:5450 159:5350 163:5600 156:5200 160:5400D 158:5300 155:5150 154:5100 159:5350D 161:5450 178:7450 176:7250D 180:7600 175:7150 173:7000 171:6850D 177:7350 183:7900 185:8100D 176:7250 168:6450 164:6100 162:5950D 160:5800 162:5900 165:6050D 166:6150 159:5750 163:5950 166:6150D 168:6300 170:6450 172:6600 169:6350D 170:6450 164:6050 160:5800 162:5950D 161:5850 157:5600 159:5750 162:5900D 164:6050 167:6250 174:7000 178:7450D 175:7200 172:6950 171:6850 176:7300D 181:7750 183:7950 173:7050 169:6650D 165:6300 161:5950 163:6100 166:6250D 167:6350 169:6500 168:6400 170:6550D 172:6750 174:6900 176:7050 173:6800D 172:6750 166:6200 162:5900 164:6050D 163:5950 159:5650 162:5900 164:6050D 166:6200 168:6350 171:6550 177:7350D 179:7550 176:7250 173:7000 177:7350D 183:7900 180:7600 186:8250D 174:7100 169:6650 165:6300 161:5950 163:6100D 160:5850 162:6000 164:6150 167:6350 170:6550D 172:6750'};
+const DATA=[];['6E','AI','QP'].forEach(k=>RAW[k].split(/\s+/).forEach((t,i)=>{const d=t.endsWith('D'),[b,p]=t.replace('D','').split(':').map(Number),f=FL[k][i%4];DATA.push([k,NM[k],f[0],new Date(Date.UTC(2023,4,1+11*i)).toISOString().slice(0,10),f[1],f[2],b,+(b/f[2]*100).toFixed(2),p,p+FEE[k],d?'DELAYED':'ON_TIME'])}));
+const MO=[...new Set(DATA.map(r=>r[3].slice(0,7)))],AG={};
+['6E','AI','QP'].forEach(k=>{AG[k]={};DATA.filter(r=>r[0]===k).forEach(r=>{const m=r[3].slice(0,7),o=AG[k][m]=AG[k][m]||{f:0,l:0,n:0};o.f+=r[8];o.l+=r[7];o.n++})});
+function mchart(t,lo,hi,fm){const W=560,H=210,L=50,x=i=>L+i*(W-L-12)/(MO.length-1),y=v=>H-26-(v-lo)/(hi-lo)*(H-42);let s=`<svg viewBox="0 0 ${W} ${H}" width="100%">`;
+for(let g=0;g<=3;g++){const v=lo+(hi-lo)*g/3;s+=`<line x1="${L}" x2="${W-8}" y1="${y(v)}" y2="${y(v)}" stroke="var(--bd)" stroke-dasharray="2 3"/><text x="2" y="${y(v)+3}">${fm(v)}</text>`}
+MO.forEach((m,i)=>{if(i%6===0)s+=`<text x="${x(i)-16}" y="${H-8}">${m}</text>`});
+CODES.forEach(k=>{s+=`<polyline fill="none" stroke="${F[k].col}" stroke-width="1.8" stroke-linejoin="round" points="${MO.map((m,i)=>x(i)+','+y(AG[k][m][t]/AG[k][m].n)).join(' ')}"/>`});return s+'</svg>'}
+function mf(k){S.mf=k;S.pg=0;draw()}function mp(d){S.pg+=d;draw()}
+function vMarket(){S.mf=S.mf||'ALL';S.pg=S.pg||0;const n=nash(),q=demand(latest),rows=DATA.filter(r=>S.mf==='ALL'||r[0]===S.mf).reverse(),PG=12,pages=Math.ceil(rows.length/PG);S.pg=Math.max(0,Math.min(S.pg,pages-1));
+let h='<div class="grid g4">';
+CODES.forEach(k=>{const rs=DATA.filter(r=>r[0]===k),l=rs[rs.length-1],av=x=>rs.reduce((s,r)=>s+r[x],0)/rs.length,ot=rs.filter(r=>r[10]==='ON_TIME').length/rs.length*100,g=(l[8]/rs[0][8]-1)*100;
+h+=`<div class="p kc" style="border-top:2px solid ${F[k].col}"><h2>${F[k].n} · ${k}</h2><div class="k">${inr(l[8])} <small>base fare, ${l[3]}</small></div><div class="${g>=0?'up':'dn'}">${g>=0?'▲':'▼'} ${Math.abs(g).toFixed(1)}% vs first record</div><div class="mini"><span>Avg fare<b>${inr(av(8))}</b></span><span>Avg LF<b>${av(7).toFixed(1)}%</b></span><span>On-time<b>${ot.toFixed(0)}%</b></span><span>Model share<b>${(q[k]/M*100).toFixed(0)}%</b></span><span>Nash fare<b>${inr(n[k])}</b></span><span>Flights<b>${rs.length}</b></span></div></div>`});
+const lg='<div class="sub">'+CODES.map(k=>`<span style="color:${F[k].col}">■</span> ${F[k].n}`).join(' &nbsp; ')+'</div>';
+h+=`</div><div class="grid g2" style="margin-top:12px"><div class="p"><h2>Monthly avg base fare (₹)</h2>${mchart(0===1?'':'f',5000,14000,inr)}${lg}</div><div class="p"><h2>Monthly avg load factor (%)</h2>${mchart('l',72,100,v=>v.toFixed(0)+'%')}${lg}</div></div>`;
+h+=`<div class="p" style="margin-top:12px"><div class="bar"><h2 style="margin:0">dgca_airline_market_history · ${rows.length} records</h2><div class="chips">${['ALL',...CODES].map(k=>`<button class="${S.mf===k?'on':''}" onclick="mf('${k}')">${k}</button>`).join('')}</div></div><div class="sc"><table><tr><th class="l">Flight</th><th class="l">Date</th><th class="l">Aircraft</th><th>Seats</th><th>Booked</th><th class="l">Load factor</th><th>Base fare</th><th>Total price</th><th class="l">Status</th></tr>`+rows.slice(S.pg*PG,S.pg*PG+PG).map(r=>`<tr><td class="l" style="color:${F[r[0]].col}">${r[2]}</td><td class="l">${r[3]}</td><td class="l">${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td><td class="l"><span class="lf"><i style="width:${r[7]}%;background:${F[r[0]].col}"></i></span> ${r[7].toFixed(1)}%</td><td>${inr(r[8])}</td><td>${inr(r[9])}</td><td class="l"><span class="pill ${r[10]==='DELAYED'?'wn':'ok'}">${r[10]}</span></td></tr>`).join('')+`</table></div><div class="bar" style="margin-top:8px"><span class="sub">Page ${S.pg+1} of ${pages} · newest first</span><div class="chips"><button onclick="mp(-1)" ${S.pg===0?'disabled':''}>← Prev</button><button onclick="mp(1)" ${S.pg>=pages-1?'disabled':''}>Next →</button></div></div></div>`;return h}
+const CODES=['6E','AI','QP'],MU=2000,M=1500;
+const F={'6E':{n:'IndiGo',c:5200,a:4.6,col:'var(--c1)'},AI:{n:'Air India',c:8400,a:7.3,col:'var(--c2)'},QP:{n:'Akasa Air',c:5000,a:3.95,col:'var(--c3)'}};
+const latest={};DATA.forEach(r=>latest[r[0]]=r[8]);
+const inr=x=>'₹'+Math.round(x).toLocaleString('en-IN'),lk=x=>(x/1e5).toFixed(1);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms)),am=a=>a.indexOf(Math.max(...a));
+/* ---- economics: Bertrand logit with product differentiation ---- */
+function demand(p,m=1){const u=CODES.map(k=>Math.exp(F[k].a-p[k]/MU)),s=u.reduce((a,b)=>a+b,1),q={};CODES.forEach((k,i)=>q[k]=M*m*u[i]/s);return q}
+const profit=(k,p,m=1)=>(p[k]-F[k].c)*demand(p,m)[k];
+function br(k,p,m=1){let b=-1e18,bp=p[k];for(let x=3000;x<=16000;x+=100){const v=profit(k,{...p,[k]:x},m);if(v>b){b=v;bp=x}}return bp}
+function nash(m=1,fix={}){let p={'6E':7000,AI:9000,QP:7000};Object.assign(p,fix);for(let i=0;i<200;i++){let d=0;for(const k of CODES){if(k in fix)continue;const n=br(k,p,m);d=Math.max(d,Math.abs(n-p[k]));p[k]=n}if(d<1)break}return p}
+/* ---- Q-learning ---- */
+const ACT=[-.12,-.06,0,.06,.12],DS=[.85,1,1.15],RB=[-.08,0,.08];
+function train(k,eps,alpha,epsl,gamma=.6){const Q=Array.from({length:9},()=>Array(5).fill(0)),curve=[],ch=Math.max(1,Math.floor(eps/40));let acc=0;
+for(let e=0;e<eps;e++){let s=Math.floor(Math.random()*9);for(let t=0;t<10;t++){const a=Math.random()<epsl?Math.floor(Math.random()*5):am(Q[s]);const p={};
+CODES.forEach(c=>p[c]=c===k?latest[c]*(1+ACT[a]):latest[c]*(1+RB[s%3]+(Math.random()-.5)*.02));
+const r=profit(k,p,DS[Math.floor(s/3)])/1e5,s2=Math.floor(Math.random()*9);Q[s][a]+=alpha*(r+gamma*Math.max(...Q[s2])-Q[s][a]);acc+=r;s=s2}
+if((e+1)%ch===0){curve.push(acc/(ch*10));acc=0}}
+return{Q,curve}}
+/* ---- Prisoner's dilemma ---- */
+function pd(A,B){const C=CODES.find(x=>x!==A&&x!==B),th=nash()[C];let best=-1,hp;
+for(let x=4000;x<=16000;x+=200)for(let y=4000;y<=16000;y+=200){const p={[A]:x,[B]:y,[C]:th},v=profit(A,p)+profit(B,p);if(v>best){best=v;hp={a:x,b:y}}}
+const mk=(a,b)=>{const p={[A]:a,[B]:b,[C]:th};return{pa:a,pb:b,ua:profit(A,p),ub:profit(B,p)}};
+const dd=nash(1,{[C]:th});
+return{C,HH:mk(hp.a,hp.b),DH:mk(br(A,{[A]:hp.a,[B]:hp.b,[C]:th}),hp.b),HD:mk(hp.a,br(B,{[A]:hp.a,[B]:hp.b,[C]:th})),DD:mk(dd[A],dd[B])}}
+/* ---- charts ---- */
+function fareChart(){const W=560,H=220,L=44,dates=[...new Set(DATA.map(r=>r[3]))];const x=i=>L+i*(W-L-20)/(dates.length-1),y=v=>H-24-(v-5000)/9000*(H-44);
+let s=`<svg viewBox="0 0 ${W} ${H}" width="100%">`;for(let v=5000;v<=14000;v+=3000)s+=`<line x1="${L}" x2="${W-10}" y1="${y(v)}" y2="${y(v)}" stroke="var(--bd)"/><text x="2" y="${y(v)+3}">${inr(v)}</text>`;
+dates.forEach((d,i)=>s+=`<text x="${x(i)-22}" y="${H-6}">${d}</text>`);
+CODES.forEach(k=>{const pts=DATA.filter(r=>r[0]===k).map((r,i)=>[x(i),y(r[8])]);s+=`<polyline fill="none" stroke="${F[k].col}" stroke-width="2" points="${pts.join(' ')}"/>`+pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="3" fill="${F[k].col}"/>`).join('')});return s+'</svg>'}
+function lineChart(v){const W=560,H=160,mn=Math.min(...v),mx=Math.max(...v),x=i=>10+i*(W-20)/(v.length-1),y=a=>H-16-(a-mn)/((mx-mn)||1)*(H-34);
+return `<svg viewBox="0 0 ${W} ${H}" width="100%"><polyline fill="none" stroke="var(--ac)" stroke-width="2" points="${v.map((a,i)=>x(i)+','+y(a)).join(' ')}"/><text x="10" y="12">avg reward / step (₹ lakh) · max ${mx.toFixed(2)}</text><text x="10" y="${H-2}">episodes →</text></svg>`}
+/* ---- views ---- */
+const S={tab:0,firm:'6E',dem:1,riv:1,eps:3000,alpha:.2,epsl:.15,run:null,nodes:[],log:[],busy:false,pa:'6E',pb:'AI'};
+const tabs=['① What’s happening in the market','② Ask the AI for a price','③ Why price wars happen'];
+function nav(){document.getElementById('nav').innerHTML=tabs.map((t,i)=>`<button class="${S.tab===i?'on':''}" onclick="S.tab=${i};draw()">${t}</button>`).join('')}
+function vMarketOld(){const n=nash(),q=demand(latest);let h='<div class="grid g4">';
+CODES.forEach(k=>{const rows=DATA.filter(r=>r[0]===k),l=rows[3],f=rows[0],g=(l[8]/f[8]-1)*100;h+=`<div class="p"><h2>${F[k].n} (${k})</h2><div class="k">${inr(l[8])} <small>base fare, Mar 2026</small></div><div class="${g>=0?'up':'dn'}">${g>=0?'▲':'▼'} ${Math.abs(g).toFixed(1)}% vs May 2023</div><div class="sub">LF ${l[7]}% · model share ${(q[k]/M*100).toFixed(0)}% · Nash ${inr(n[k])}</div></div>`});
+h+='</div><div class="grid g2" style="margin-top:12px"><div class="p"><h2>Base fare trajectory (₹)</h2>'+fareChart()+'<div class="sub">'+CODES.map(k=>`<span style="color:${F[k].col}">■</span> ${F[k].n}`).join(' &nbsp; ')+'</div></div>';
+h+='<div class="p"><h2>Load factor by observation (%)</h2>'+DATA.map(r=>`<div style="display:flex;gap:8px;align-items:center;margin:2px 0"><span style="width:96px">${r[2]}</span><div style="flex:1;background:var(--bg);height:8px"><div style="width:${r[7]}%;background:${F[r[0]].col};height:8px"></div></div><span style="width:48px;text-align:right">${r[7]}</span></div>`).join('')+'</div></div>';
+h+='<div class="p sc" style="margin-top:12px"><h2>dgca_airline_market_history · BLR→DEL</h2><table><tr><th class="l">Flight</th><th class="l">Date</th><th class="l">Aircraft</th><th>Seats</th><th>Booked</th><th>LF %</th><th>Base fare</th><th>Total price</th><th class="l">Status</th></tr>'+DATA.map(r=>`<tr><td class="l" style="color:${F[r[0]].col}">${r[2]}</td><td class="l">${r[3]}</td><td class="l">${r[4]}</td><td>${r[5]}</td><td>${r[6]}</td><td>${r[7].toFixed(2)}</td><td>${inr(r[8])}</td><td>${inr(r[9])}</td><td class="l"><span class="tag ${r[10]==='DELAYED'?'wn':''}">${r[10]}</span></td></tr>`).join('')+'</table></div>';return h}
+function vAgent(){const o=(a,v)=>a.map(([x,t])=>`<option value="${x}" ${String(v)===String(x)?'selected':''}>${t}</option>`).join('');
+let h=`<div class="p"><h2>Pipeline configuration</h2><div class="ctl">
+<label>Firm<select onchange="S.firm=this.value">${o(CODES.map(k=>[k,F[k].n]),S.firm)}</select></label>
+<label>Demand regime<select onchange="S.dem=+this.value">${o([[0,'Off-peak (−15%)'],[1,'Base'],[2,'Peak (+15%)']],S.dem)}</select></label>
+<label>Rival stance<select onchange="S.riv=+this.value">${o([[0,'Discounting (−8%)'],[1,'Observed fares'],[2,'Premium (+8%)']],S.riv)}</select></label>
+<label>Episodes: ${S.eps}<input type=range min=500 max=10000 step=500 value=${S.eps} oninput="S.eps=+this.value;this.parentNode.firstChild.textContent='Episodes: '+this.value"></label>
+<label>Learning rate α: ${S.alpha}<input type=range min=.05 max=.5 step=.05 value=${S.alpha} oninput="S.alpha=+this.value;this.parentNode.firstChild.textContent='Learning rate α: '+this.value"></label>
+<label>Exploration ε: ${S.epsl}<input type=range min=.02 max=.4 step=.01 value=${S.epsl} oninput="S.epsl=+this.value;this.parentNode.firstChild.textContent='Exploration ε: '+this.value"></label>
+<button class="btn" ${S.busy?'disabled':''} onclick="runGraph()">▶ Execute graph</button></div></div>`;
+h+='<div class="flow" style="margin:12px 0">'+(S.nodes.length?S.nodes:['Market Data','Q-Learning Engine','Nash Solver','Antitrust Check'].map(n=>({t:n,s:'',b:'idle'}))).map((n,i)=>`<div class="node ${n.s}"><b>${i+1}. ${n.t}</b> <span class="tag">${n.b||''}</span><pre>${n.d||'waiting'}</pre></div>`).join('')+'</div>';
+if(S.run){const r=S.run;h+=`<div class="grid g2"><div class="p"><h2>Decision · ${F[S.firm].n}</h2><div class="k ${r.ok?'up':'wn'}">${inr(r.q)} <small>recommended base fare</small></div><div class="sub">Δ vs observed ${((r.q/latest[S.firm]-1)*100).toFixed(1)}% · Nash ${inr(r.n)} · unilateral best response ${inr(r.b)} · regret ${r.reg.toFixed(2)}%</div>
+<h2 style="margin-top:14px">Antitrust compliance</h2><table>${r.chk.map(c=>`<tr><td class="l">${c[0]}</td><td class="${c[1]?'up':'dn'}">${c[1]?'PASS':'REVIEW'}</td></tr>`).join('')}</table></div>
+<div class="p"><h2>Q-learning convergence</h2>${lineChart(r.curve)}<h2 style="margin-top:10px">Q-table (state: demand × rival stance → Δ fare)</h2><div class="sc"><table><tr><th class="l">State</th>${ACT.map(a=>`<th>${a>0?'+':''}${a*100}%</th>`).join('')}</tr>${r.Q.map((q,i)=>{const m=am(q),lo=Math.min(...q),hi=Math.max(...q);return `<tr><td class="l">D${['−','0','+'][Math.floor(i/3)]} · R${['−','0','+'][i%3]}</td>${q.map((v,j)=>`<td style="background:color-mix(in srgb,var(--ac) ${Math.round((v-lo)/((hi-lo)||1)*40)}%,transparent);${j===m?'font-weight:700':''}">${v.toFixed(1)}</td>`).join('')}</tr>`}).join('')}</table></div></div></div>`}
+return h+`<div class="p" style="margin-top:12px"><h2>Agent telemetry log</h2><div class="log">${S.log.map(l=>`<div>${l}</div>`).join('')||'No runs yet.'}</div></div>`}
+async function runGraph(){if(S.busy)return;S.busy=true;S.log=[];S.run=null;const k=S.firm,t0=Date.now(),L=m=>S.log.push(`[+${((Date.now()-t0)/1000).toFixed(2)}s] ${m}`);
+const N=S.nodes=[{t:'Market Data'},{t:'Q-Learning Engine'},{t:'Nash Solver'},{t:'Antitrust Check'}].map(x=>({...x,s:'',b:'idle',d:'waiting'}));
+const step=async(i,fn)=>{N[i].s='run';N[i].b='running';draw();await sleep(450);const t=performance.now();const d=fn();N[i].s='ok';N[i].b=(performance.now()-t).toFixed(0)+' ms';N[i].d=d;draw();};
+const rv={};CODES.forEach(c=>rv[c]=c===k?latest[c]:latest[c]*(1+RB[S.riv]));
+let res={};
+await step(0,()=>{L('Loaded '+DATA.length+' DGCA records from dgca_airline_market_history (public data only)');return`firm=${k}\ndemand×${DS[S.dem]}\nrivals: ${CODES.filter(c=>c!==k).map(c=>c+' '+inr(rv[c])).join(', ')}`});
+await step(1,()=>{const {Q,curve}=train(k,S.eps,S.alpha,S.epsl);const st=S.dem*3+S.riv,a=am(Q[st]);res={Q,curve,q:Math.round(latest[k]*(1+ACT[a])/50)*50,a};L(`Q-learning: ${S.eps} episodes, state ${st}, action ${ACT[a]*100}%`);return`state=${st}\naction=${ACT[a]>0?'+':''}${ACT[a]*100}%\nQ-price=${inr(res.q)}`});
+await step(2,()=>{const n=nash(DS[S.dem]),p={...rv,[k]:res.q},b=br(k,{...rv},DS[S.dem]);res.n=n[k];res.b=b;res.reg=(1-profit(k,p,DS[S.dem])/profit(k,{...rv,[k]:b},DS[S.dem]))*100;L(`Nash fixed point: ${CODES.map(c=>c+' '+inr(n[c])).join(', ')}`);return`Nash(${k})=${inr(n[k])}\nBR to rivals=${inr(b)}\nprofit regret=${res.reg.toFixed(2)}%`});
+await step(3,()=>{const ra=CODES.filter(c=>c!==k).reduce((s,c)=>s+rv[c],0)/2,chk=[['Inputs limited to public DGCA/market observations',true],['Price within ±15% of unilateral best response',Math.abs(res.q/res.b-1)<=.15],['Profit regret vs best response ≤ 10%',res.reg<=10],['Not mirroring rival average (parallel-pricing signal >0.5%)',Math.abs(res.q/ra-1)>.005],['Below regulatory fare ceiling ₹18,000',res.q<=18000]];res.chk=chk;res.ok=chk.every(c=>c[1]);L(res.ok?'Antitrust guard: CLEARED':'Antitrust guard: REVIEW REQUIRED');return chk.map(c=>(c[1]?'✓ ':'✗ ')+c[0]).join('\n')});
+S.run={...res};S.busy=false;draw()}
+function vPD(){const{pa:A,pb:B}=S,r=pd(A,B),o=k=>`<option value="${k}">${F[k].n}</option>`;
+const cell=(c,t,nn)=>`<div class="cell ${nn?'n':''}"><div class="sub">${t}</div><div style="color:${F[A].col}">${F[A].n} ${inr(c.pa)} → ₹${lk(c.ua)}L</div><div style="color:${F[B].col}">${F[B].n} ${inr(c.pb)} → ₹${lk(c.ub)}L</div></div>`;
+const pdok=r.DH.ua>r.HH.ua&&r.HH.ua>r.DD.ua&&r.DD.ua>r.HD.ua&&r.HD.ub>0&&r.HD.ub>r.HH.ub&&r.HH.ub>r.DD.ub&&r.DD.ub>r.DH.ub;
+return`<div class="p"><h2>Duopoly subgame (third carrier ${F[r.C].n} held at its Nash price)</h2><div class="ctl"><label>Row player<select onchange="S.pa=this.value;if(S.pb===S.pa)S.pb=CODES.find(c=>c!==S.pa);draw()">${CODES.map(k=>o(k).replace(`value="${k}"`,`value="${k}" ${k===A?'selected':''}`)).join('')}</select></label><label>Column player<select onchange="S.pb=this.value;if(S.pa===S.pb)S.pa=CODES.find(c=>c!==S.pb);draw()">${CODES.map(k=>o(k).replace(`value="${k}"`,`value="${k}" ${k===B?'selected':''}`)).join('')}</select></label></div></div>
+<div class="p" style="margin-top:12px"><h2>Payoff matrix · daily profit, ₹ lakh</h2><div class="mx"><div></div><div class="hd">${F[B].n}: Hold (joint-optimal)</div><div class="hd">${F[B].n}: Undercut (best response)</div>
+<div class="hd">${F[A].n}: Hold</div>${cell(r.HH,'Hold / Hold · cooperative')}${cell(r.HD,'Hold / Undercut')}
+<div class="hd">${F[A].n}: Undercut</div>${cell(r.DH,'Undercut / Hold')}${cell(r.DD,'Undercut / Undercut · Nash equilibrium',true)}</div></div>
+<div class="p" style="margin-top:12px"><h2>Reading</h2><p>Mutual holding yields combined ₹${lk(r.HH.ua+r.HH.ub)}L; the Nash cell yields ₹${lk(r.DD.ua+r.DD.ub)}L. Each carrier gains by unilaterally undercutting a holder (${F[A].n} ₹${lk(r.DH.ua)}L vs ₹${lk(r.HH.ua)}L), so undercutting is the best response and both land in the lower-profit equilibrium.</p>
+<p class="${pdok?'up':'wn'}">${pdok?'✓ Payoffs satisfy the strict Prisoner’s Dilemma ordering (T > R > P > S) for both players.':'Payoffs do not form a strict dilemma for this pair; differentiation softens the incentive to undercut.'}</p>
+<p class="sub">Brand differentiation (logit demand with outside option) keeps Bertrand margins positive. The agent only uses public fares and its own best response – no signalling or information sharing, so cooperative outcomes are shown for analysis, never targeted.</p></div>`}
+const box=(t,b)=>`<div class="p hint"><h2>${t}</h2><div class="big">${b}</div></div>`;
+const SW=[['Market Data','Read the market'],['Q-Learning Engine','AI practises pricing'],['Nash Solver','Compare with a rational rival'],['Antitrust Check','Fair-play check'],['Pipeline configuration','Step 1 · Describe the situation'],['>Firm<','>Which airline is pricing?<'],['Demand regime','How busy is travel?'],['Rival stance','What are rivals doing?'],['Episodes:','Practice rounds:'],['Learning rate α:','How fast it learns:'],['Exploration ε:','How often it experiments:'],['▶ Execute graph','▶ Step 2 · Find the best price'],['Decision · ','Answer · '],['recommended base fare','suggested ticket price'],['Antitrust compliance','Fair-play checks (is the price independent and lawful?)'],['>PASS<','>✅ OK<'],['>REVIEW<','>⚠ Look closer<'],['Q-learning convergence','Is the AI improving? (line going up = earning more)'],['Q-table (state: demand × rival stance → Δ fare)','The AI’s notes: expected profit for each price move (bold = its pick)'],['Agent telemetry log','Play-by-play log'],['state=','situation #'],['action=','price move='],['Q-price=','AI price='],['Nash(','Balanced price('],['BR to rivals=','best reply to rivals='],['profit regret=','profit given up='],['firm=','airline='],['demand×','demand ×'],['Nash ','Balanced '],['Nash fare','Balanced fare'],['Model share','Est. market share'],['Avg LF','Avg seats filled'],['Monthly avg base fare (₹)','Average ticket price by month (₹)'],['Monthly avg load factor (%)','How full were the planes? (% of seats sold, by month)'],['dgca_airline_market_history','Every flight on record (DGCA data)'],['Load factor','Seats filled'],['Total price','Price incl. fees'],['Base fare','Ticket price'],['base fare','ticket price'],[': Hold (joint-optimal)',': keeps price HIGH'],[': Undercut (best response)',': CUTS price'],[': Hold</div>',': keeps price high</div>'],[': Undercut</div>',': cuts price</div>'],['Hold / Hold · cooperative','Both keep high · best for both'],['Undercut / Undercut · Nash equilibrium','Both cut · where they end up'],['Hold / Undercut','Only column cuts'],['Undercut / Hold','Only row cuts'],['>Reading<','>What this means<'],['Duopoly subgame (third carrier ','Pick two airlines (the third, '],[' held at its Nash price)',', stays fixed)'],['Payoff matrix · daily profit, ₹ lakh','Who earns what? Daily profit in ₹ lakh (₹1 lakh = 100,000)']];
+const GL=`<details class="p gl"><summary>📖 Jargon buster (tap to open)</summary><ul><li><b>Ticket price (base fare)</b> – the fare before taxes and fees.</li><li><b>Seats filled (load factor)</b> – % of seats sold. 90% = nearly full.</li><li><b>AI practice rounds</b> – the AI plays thousands of pretend days, tries prices, and remembers which earned the most (“Q-learning”).</li><li><b>Balanced price (Nash)</b> – the price an airline would pick if it was reacting sensibly to what rivals charge. No one gains by changing alone.</li><li><b>Profit given up (regret)</b> – how much money the AI’s price loses compared with the single best price.</li><li><b>Fair-play check (antitrust)</b> – makes sure the AI uses only public prices and doesn’t just copy or secretly coordinate with rivals, which is illegal.</li><li><b>Keep high / Cut price</b> – the choice in a price war game: stay expensive together, or undercut to steal customers.</li></ul></details>`;
+function intro(){const t=S.tab;if(t===0){const av=k=>{const r=DATA.filter(x=>x[0]===k);return r.reduce((s,x)=>s+x[8],0)/r.length},ks=[...CODES].sort((a,b)=>av(a)-av(b)),m=x=>+x[3].slice(5,7),mean=a=>a.reduce((s,x)=>s+x[8],0)/a.length,pr=(mean(DATA.filter(x=>m(x)>=10))/mean(DATA.filter(x=>m(x)<10))-1)*100;
+return box('What am I looking at?',`<p>This is the flight history of <b>3 airlines</b> flying <b>Bengaluru → Delhi</b>: ${DATA.length} flights from May 2023 to April 2026. Nothing to click here except the filter buttons – just read it.</p><p>• <b>Cheapest</b> on average: <b>${F[ks[0]].n}</b> (${inr(av(ks[0]))}). <b>Most expensive</b>: <b>${F[ks[2]].n}</b> (${inr(av(ks[2]))}).</p><p>• Prices jump about <b>${pr.toFixed(0)}%</b> in October–December (festival and winter travel) when planes are almost full.</p><p>• Next, go to tab <b>② Ask the AI for a price</b>.</p>`)}
+if(t===1)return box('How to use this screen (3 steps)',`<p><b>Step 1.</b> Choose an airline and describe the day below (busy or quiet, and what rivals are charging).<br><b>Step 2.</b> Press the green button. An AI plays thousands of pretend days to learn which ticket price earns the most.<br><b>Step 3.</b> Read the “Answer” box. Then a fair-play check confirms the price is independent and not copying rivals.</p><p class="sub">Change something and the answer stays old until you press the green button again.</p>`)+ansBox();
+return box('Why do airlines end up in price wars?',`<p>Imagine two airlines. If <b>both keep prices high</b>, both earn well. But each one is tempted to <b>cut its price</b> to steal passengers. If both cut, both earn <b>less</b> – yet neither dares to raise the price first. That trap is the “Prisoner’s Dilemma”. The table below shows the actual rupee numbers from our model.</p>`)}
+function ansBox(){const r=S.run;if(!r)return box('Your answer will appear here','<p>Nothing yet – set the situation below and press <b>▶ Step 2 · Find the best price</b>.</p>');const k=S.firm,cur=latest[k],c=(r.q/cur-1)*100;
+return `<div class="p hint ${r.ok?'':'warn'}"><h2>In plain English</h2><div class="big"><p>For <b>${F[k].n}</b> on a <b>${['quiet','normal','very busy'][S.dem]}</b> day, with rivals <b>${['cutting prices','charging today’s prices','charging more'][S.riv]}</b>, the AI suggests a ticket price of <b>${inr(r.q)}</b> – ${Math.abs(c)<.5?'about the same as':(c>0?Math.abs(c).toFixed(1)+'% higher than':Math.abs(c).toFixed(1)+'% lower than')} today’s ${inr(cur)}.</p><p>The best possible reply to rivals would be ${inr(r.b)}; the AI’s price gives up only about <b>${r.reg.toFixed(1)}%</b> of that profit.</p><p>${r.ok?'✅ <b>Fair-play checks: all passed.</b> The price looks independent and sensible.':'⚠ <b>Fair-play checks: something needs a human to look.</b> See the list below.'}</p></div></div>`}
+function pdBox(){const A=S.pa,B=S.pb,r=pd(A,B);return box('The story in numbers',`<p>If both <b>${F[A].n}</b> and <b>${F[B].n}</b> keep prices high, together they earn <b>₹${lk(r.HH.ua+r.HH.ub)} lakh</b> a day. If both cut prices to compete, together they earn only <b>₹${lk(r.DD.ua+r.DD.ub)} lakh</b>. The difference is what a price war costs them.</p>`)}
+function tick(){const n=window._n||(window._n=nash()),it=CODES.map(k=>{const rs=DATA.filter(r=>r[0]===k),l=rs[rs.length-1],d=(l[8]/rs[rs.length-2][8]-1)*100;return `<span><b style="color:${F[k].col}">${k}</b> ${inr(l[8])} <em class="${d>=0?'up':'dn'}">${d>=0?'▲':'▼'}${Math.abs(d).toFixed(1)}%</em> · LF ${l[7].toFixed(0)}% · NASH ${inr(n[k])}</span>`}).join('');document.getElementById('tk').innerHTML=it+it+it+it}
+function draw(){tick();nav();let h=[vMarket,vAgent,vPD][S.tab]();SW.forEach(([a,b])=>h=h.split(a).join(b));document.getElementById('view').innerHTML=intro()+(S.tab===2?pdBox():'')+h+GL}
+setInterval(()=>document.getElementById('clock').textContent=new Date().toLocaleString('en-IN'),1000);draw();
+</script></body></html>
